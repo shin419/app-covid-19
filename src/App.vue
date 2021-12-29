@@ -11,13 +11,13 @@ import Vue from 'vue';
 import axios from 'axios'
 import { initializeApp } from "firebase/app";
 const firebaseConfig = {
-  apiKey: "AIzaSyCx82osJyixoyb1K7uFuOZSRpZDRWyhE_0",
-  authDomain: "covid-19-365b8.firebaseapp.com",
-  projectId: "covid-19-365b8",
-  storageBucket: "covid-19-365b8.appspot.com",
-  messagingSenderId: "858317621349",
-  appId: "1:858317621349:web:b1d508cf94dcebfcc49e8c",
-  measurementId: "G-GHCT52X50E"
+  apiKey: "AIzaSyBwAzZGU1ZvxyhmpatroecdshIOSUaQ8N8",
+  authDomain: "app-covid-19-43ffb.firebaseapp.com",
+  projectId: "app-covid-19-43ffb",
+  storageBucket: "app-covid-19-43ffb.appspot.com",
+  messagingSenderId: "1016931497598",
+  appId: "1:1016931497598:web:6a733ce8bd3a6e77aa4a2f",
+  measurementId: "G-10QVS0TMC7"
 };
 initializeApp(firebaseConfig)
 export default Vue.extend({
@@ -40,7 +40,7 @@ export default Vue.extend({
     }
   },
   created() {
-    this.getData()
+    // this.getData()
   }
 });
 </script>

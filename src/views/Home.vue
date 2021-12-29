@@ -1,5 +1,25 @@
 <template>
   <div class="pa-4">
+    <h1 class="text-center font-weight-bold pb-4">Covid-19</h1>
+    <div class="row justify-center text-center">
+      <div class="col-12 col-sm-3 font-weight-bold">
+        <div class="pb-2">New Confirmed</div>
+        <div class="red--text">+ {{formatNumber(global.NewConfirmed)}}</div>
+        <div>{{formatNumber(global.TotalConfirmed)}}</div>
+      </div>
+      <v-divider vertical></v-divider>
+      <div class="col-12 col-sm-3 font-weight-bold">
+        <div class="pb-2">New Deaths</div>
+        <div>{{formatNumber(global.NewDeaths)}}</div>
+        <div>{{formatNumber(global.TotalDeaths)}}</div>
+      </div>
+      <v-divider vertical></v-divider>
+      <div class="col-12 col-sm-3 font-weight-bold">
+        <div class="pb-2">New Recovered</div>
+        <div class="green--text">{{formatNumber(global.NewRecovered)}}</div>
+        <div>{{formatNumber(global.TotalRecovered)}}</div>
+      </div>
+    </div>
     <v-data-table
         :headers="headers"
         :items="countriesCovid"
@@ -53,7 +73,7 @@
     </v-data-table>
     <v-dialog
         v-model="dialog.country"
-        max-width="80%"
+        max-width="85%"
     >
       <v-card>
         <v-card-title>
@@ -67,24 +87,45 @@
         </v-card-title>
         <v-card-actions>
           <v-row style="margin: 0">
-            <div class="col-md-5 col-12" v-if="country && getCountries[country.Country]">
+            <div class="text-center col-12 font-weight-bold" style="padding: 0 0 5px 0 ">TODAY</div>
+            <div style="padding: 0 0 5px 0" class="row col-12 justify-center text-center mb-3">
+              <div class="col-12 col-sm-4 font-weight-bold">
+                <div class="pb-2">New Confirmed</div>
+                <div class="red--text">+ {{formatNumber(country.NewConfirmed)}}</div>
+                <div>{{formatNumber(country.TotalConfirmed)}}</div>
+              </div>
+              <v-divider vertical></v-divider>
+              <div class="col-12 col-sm-4 font-weight-bold">
+                <div class="pb-2">New Deaths</div>
+                <div>{{formatNumber(country.NewDeaths)}}</div>
+                <div>{{formatNumber(country.TotalDeaths)}}</div>
+              </div>
+              <v-divider vertical></v-divider>
+              <div class="col-12 col-sm-4 font-weight-bold">
+                <div class="pb-2">New Recovered</div>
+                <div class="green--text">{{formatNumber(country.NewRecovered)}}</div>
+                <div>{{formatNumber(country.TotalRecovered)}}</div>
+              </div>
+            </div>
+            <div class="col-md-5 col-12" v-if="country && detailCountry">
               <div class="row justify-center">
                 <v-img
                     max-width="150"
-                    :src="getCountries[country.Country].coatOfArms.png"
+                    max-height="150"
+                    :src="detailCountry.coatOfArms.png"
                 ></v-img>
               </div>
               <div class="font-weight-bold">
                 <p class="text-center mt-6 font-weight-bold">{{country.Country}}</p>
-                <p class="text-center">Population: {{formatNumber(getCountries[country.Country].population)}}</p>
-                <p class="text-center">Capital: {{getCountries[country.Country].capital && getCountries[country.Country].capital[0]}}</p>
-                <p class="text-center">Region: {{getCountries[country.Country].region}}</p>
-                <p class="text-center">Subregion: {{getCountries[country.Country].subregion}}</p>
+                <p class="text-center">Population: {{formatNumber(detailCountry.population)}}</p>
+                <p class="text-center">Capital: {{detailCountry.capital && detailCountry.capital[0]}}</p>
+                <p class="text-center">Region: {{detailCountry.region}}</p>
+                <p class="text-center">Subregion: {{detailCountry.subregion}}</p>
               </div>
             </div>
             <div class="col-md-7 col-12">
               <v-card class="text-center">
-                <div class="row justify-end pr-5 pt-2">
+                <div class="row justify-end pr-6 pt-3">
                   <div class="mt-1">
                     <v-menu :offset-y="true" v-model="menu" :close-on-content-click="false">
                       <template v-slot:activator="{ attrs, on }">
@@ -109,21 +150,16 @@
                             item-text="label"
                             item-value="value" v-model="time" :items="times" solo dense @change="changeTime"></v-select>
                 </div>
-                <v-card-text>
-                  <v-sheet color="rgba(0, 0, 0, .12)">
+                <v-card-text style="padding: 0" class="px-3 pb-3">
+                  <v-sheet color="rgba(48,150,54,0.12)">
                     <v-sparkline
-                        :value="value"
-                        :gradient="gradient"
-                        :smooth="radius || false"
-                        :padding="padding"
-                        :line-width="width"
-                        :stroke-linecap="lineCap"
-                        :gradient-direction="gradientDirection"
                         :fill="fill"
-                        :type="type"
-                        :auto-line-width="autoLineWidth"
+                        :line-width="width"
+                        :padding="padding"
+                        :smooth="radius || false"
+                        :value="value"
                         auto-draw
-                        height="200"
+                        height="150"
                     ></v-sparkline>
                   </v-sheet>
                 </v-card-text>
@@ -149,7 +185,7 @@ const gradients = [
   ['red', 'orange', 'yellow'],
   ['purple', 'violet'],
   ['#00c6ff', '#F0F', '#FF0'],
-  ['#f72047', '#ffd200', '#1feaea'],
+  ['#f72047', '#ffd200', 'rgba(48,150,54,0.12)'],
 ]
 export default Vue.extend({
   name: 'Home',
@@ -187,7 +223,9 @@ export default Vue.extend({
     ],
     time: {value: 0, label: 'Full time'},
     dates: [],
-    menu: false
+    menu: false,
+    detailCountry: null,
+    global: {}
   }),
   computed: {
     ...mapGetters(['getCountries', 'getCountryHide']),
@@ -220,9 +258,7 @@ export default Vue.extend({
             if (res.status === 200) {
               let data = res.data || []
               this.value = data.map((item) => (item.Confirmed))
-              if (!obTime) {
-                this.dialog.country = true
-              }
+              this.dialog.country = true
             }
           })
           .catch((e) => {
@@ -237,17 +273,38 @@ export default Vue.extend({
       dayEnd = date().format('YYYY-MM-DD')
       return { from: dayStart, to: dayEnd }
     },
-    selectItem (item) {
+    async selectItem(item) {
       this.country = item
-      this.getDetailCountry()
+      this.getCountry(item.Country)
+      let obTime = null
+      if (item.Slug === 'united-states') {
+        obTime = await this.selectName(7)
+        this.time = 7
+      } else {
+        this.time = 0
+      }
+      this.getDetailCountry(obTime)
     },
     formatNumber(value) {
       const val = (value / 1).toFixed(0).replace(',', ',')
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
+    getCountry(name) {
+      axios.get('https://restcountries.com/v3.1/name/' + name)
+          .then((res) => {
+            if (res.status === 200) {
+              let country = res.data || []
+              this.detailCountry = country[0]
+            }
+          })
+          .catch((e) => {
+            console.log(e)
+          })
+    },
     getData() {
       axios.get('https://api.covid19api.com/summary')
           .then((res) => {
+            this.global = (res.data && res.data.Global) || {}
             let countries = (res.data && res.data.Countries) || []
             this.countries = countries.sort((a, b) => (b.TotalConfirmed - a.TotalConfirmed))
           })
