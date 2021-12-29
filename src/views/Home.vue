@@ -178,7 +178,7 @@ import Vue from 'vue'
 import axios from 'axios'
 import {mapGetters} from "vuex";
 import notify from "@/components/notify.vue";
-import date from 'moment'
+import util from '../util'
 const gradients = [
   ['#222'],
   ['#42b3f4'],
@@ -225,7 +225,8 @@ export default Vue.extend({
     dates: [],
     menu: false,
     detailCountry: null,
-    global: {}
+    global: {},
+    formatNumber: util.formatNumber
   }),
   computed: {
     ...mapGetters(['getCountries', 'getCountryHide']),
@@ -237,7 +238,7 @@ export default Vue.extend({
   },
   methods: {
     async changeTime() {
-      let obTime = await this.selectName(this.time)
+      let obTime = await util.resTime(this.time)
       this.getDetailCountry(obTime)
     },
     removeCountry () {
@@ -265,30 +266,17 @@ export default Vue.extend({
             console.log(e)
           })
     },
-    selectName (day) {
-      let dayStart = ''
-      let dayEnd = ''
-      let timeStart = date().subtract(day, 'days')
-      dayStart = date(timeStart).format('YYYY-MM-DD')
-      dayEnd = date().format('YYYY-MM-DD')
-      return { from: dayStart, to: dayEnd }
-    },
     async selectItem(item) {
       this.country = item
       this.getCountry(item.Country)
       let obTime = null
       if (item.Slug === 'united-states') {
-        obTime = await this.selectName(7)
+        obTime = await util.resTime(7)
         this.time = 7
       } else {
         this.time = 0
       }
       this.getDetailCountry(obTime)
-    },
-    formatNumber(value) {
-      value = value || 0
-      const val = (value / 1).toFixed(0).replace(',', ',')
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
     getCountry(name) {
       axios.get('https://restcountries.com/v3.1/name/' + name)
