@@ -1,7 +1,7 @@
 import util from '../util'
 import date from "moment";
 
-describe("App.test.js", () => {
+describe("util.test.js", () => {
     it('should be 1.000 if 1000', () => {
         var isFormat = util.formatNumber(1000)
         expect(isFormat).toEqual('1.000');
