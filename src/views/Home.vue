@@ -286,6 +286,7 @@ export default Vue.extend({
       this.getDetailCountry(obTime)
     },
     formatNumber(value) {
+      value = value || 0
       const val = (value / 1).toFixed(0).replace(',', ',')
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
     },
