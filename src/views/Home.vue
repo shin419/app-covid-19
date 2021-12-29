@@ -155,7 +155,7 @@
                     <v-sparkline
                         :fill="fill"
                         :line-width="width"
-                        :padding="padding"
+                        padding="8"
                         :smooth="radius || false"
                         :value="value"
                         auto-draw
@@ -174,20 +174,11 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import axios from 'axios'
 import {mapGetters} from "vuex";
-import notify from "@/components/notify.vue";
+import notify from "../components/notify.vue";
 import util from '../util'
-const gradients = [
-  ['#222'],
-  ['#42b3f4'],
-  ['red', 'orange', 'yellow'],
-  ['purple', 'violet'],
-  ['#00c6ff', '#F0F', '#FF0'],
-  ['#f72047', '#ffd200', 'rgba(48,150,54,0.12)'],
-]
-export default Vue.extend({
+export default {
   name: 'Home',
   components: { notify },
   data: () => ({
@@ -207,14 +198,8 @@ export default Vue.extend({
     value: [],
     width: 2,
     radius: 10,
-    padding: 8,
-    lineCap: 'round',
-    gradient: gradients[5],
-    gradientDirection: 'top',
-    gradients,
     fill: false,
     type: 'trend',
-    autoLineWidth: false,
     times: [
       {value: 0, label: 'Full time'},
       {value: 7, label: '7 days ago'},
@@ -305,7 +290,7 @@ export default Vue.extend({
   created() {
     this.getData()
   }
-})
+}
 </script>
 <style scoped>
 p {

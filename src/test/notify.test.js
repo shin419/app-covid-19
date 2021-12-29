@@ -15,7 +15,7 @@ describe('notify.test.js', () => {
         })
     })
 
-    it('equals messages to { notify: false, val: demo notify }', () => {
+    it('equals snackbar to { notify: false, val: demo notify }', () => {
         expect(vm.snackbar).toEqual({
             notify: false,
             val: 'demo notify'
